@@ -14,15 +14,7 @@
 import PyPDF2
 import sys
 
-# This script uses 1-based index, however
-# PyPDF2 uses 0-based index.
 num_args = len(sys.argv)
-if num_args >= 4:
-    end_page = sys.argv[3] - 1
-
-start_page = 0
-if num_args >= 3:
-    start_page = sys.argv[2] - 1
 
 if num_args >= 2:
     filename = sys.argv[1]
@@ -31,6 +23,19 @@ else:
     print("Usage:")
     print("py get_text_from_pdf filename.pdf [start_page] [end_page]")
     sys.exit()
+
+
+# This script uses 1-based index, however
+# PyPDF2 uses 0-based index.
+start_page = 0
+if num_args >= 3:
+    start_page = int(sys.argv[2]) - 1
+    assert start_page >= 0, "start_page should be a non-negative integer"
+
+if num_args >= 4:
+    end_page = int(sys.argv[3]) - 1
+    assert end_page >= start_page, "end_page should be same or after start_page"
+
 
 pdf_file = open(filename, "rb")
 pdf_reader = PyPDF2.PdfFileReader(pdf_file)
