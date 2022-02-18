@@ -30,18 +30,23 @@ else:
 start_page = 0
 if num_args >= 3:
     start_page = int(sys.argv[2]) - 1
-    assert start_page >= 0, "start_page should be a non-negative integer"
+    assert start_page >= 0, "start_page should be a positive integer"
 
 if num_args >= 4:
     end_page = int(sys.argv[3]) - 1
     assert end_page >= start_page, "end_page should be same or after start_page"
+else:
+    end_page = start_page
 
 
 pdf_file = open(filename, "rb")
 pdf_reader = PyPDF2.PdfFileReader(pdf_file)
 print(pdf_reader.numPages)
+assert start_page < pdf_reader.numPages, "start_page is too large"
+assert end_page < pdf_reader.numPages, "end_page is too large"
 
-for i in range(1):
+for i in range(start_page, end_page + 1):
     page = pdf_reader.getPage(i)
+    print(f"The text from page #{i+1}")
     print(page.extractText())
 
